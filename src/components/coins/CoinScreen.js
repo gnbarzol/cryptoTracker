@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Pressable, StyleSheet} from 'react-native';
+import {View, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
 import Http from 'cryptoTracker/src/libs/http';
+import CoinItem from './CoinItem';
 
 const CoinsScreen = (props) => {
   const [loading, setLoading] = useState(false);
@@ -24,11 +25,11 @@ const CoinsScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {loading && <Text>Loading...</Text>}
-      <Text>Coins screem</Text>
-      <Pressable onPress={handlePress} style={styles.btn}>
-        <Text>Ir a detail</Text>
-      </Pressable>
+        {loading && <ActivityIndicator color="#000" size="large" style={styles.loader} />}
+        <FlatList
+          data={coins}
+          renderItem={({item}) => <CoinItem item={item} />}
+        />
     </View>
   );
 };
@@ -36,7 +37,8 @@ const CoinsScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: "white",
+    paddingBottom: 25
   },
   btn: {
     padding: 8,
@@ -44,6 +46,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
   },
+  loader: {
+      marginTop: 10
+  }
 });
 
 export default CoinsScreen;
