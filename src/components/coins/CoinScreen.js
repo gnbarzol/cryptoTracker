@@ -3,6 +3,8 @@ import {View, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
 import Http from 'cryptoTracker/src/libs/http';
 import CoinItem from './CoinItem';
 
+import Color from 'cryptoTracker/src/res/colors'
+
 const CoinsScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [coins, setCoins] = useState([]);
@@ -37,8 +39,7 @@ const CoinsScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    paddingBottom: 25
+    backgroundColor: Color.charade,
   },
   btn: {
     padding: 8,
