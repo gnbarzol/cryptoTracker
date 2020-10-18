@@ -1,16 +1,16 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, Platform} from 'react-native';
+import {View, Text, StyleSheet, Image, Platform, Pressable} from 'react-native';
 import Color from 'cryptoTracker/src/res/colors';
 
-const CoinItem = ({item}) => {
+const CoinItem = ({item, onPress}) => {
   getImgArrow = () => {
     if (item.percent_change_1h > 0)
-      return (require('cryptoTracker/src/assets/arrow_up.png'))
-    else return (require('cryptoTracker/src/assets/arrow_down.png'))
+      return require('cryptoTracker/src/assets/arrow_up.png');
+    else return require('cryptoTracker/src/assets/arrow_down.png');
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPress}>
       <View style={styles.row}>
         <Text style={styles.symbolText}>{item.symbol}</Text>
         <Text style={styles.nameText}>{item.name}</Text>
@@ -20,7 +20,7 @@ const CoinItem = ({item}) => {
         <Text style={styles.percentText}>{item.percent_change_1h}</Text>
         <Image style={styles.imgIcon} source={getImgArrow()} />
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -31,11 +31,11 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomColor: Color.zircon,
     borderBottomWidth: 1,
-    marginLeft: Platform.OS == 'ios' ? 16: 0
+    marginLeft: Platform.OS == 'ios' ? 16 : 0,
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   symbolText: {
     color: '#fff',
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   percentText: {
     color: '#fff',
     fontSize: 12,
-    marginRight: 8
+    marginRight: 8,
   },
   imgIcon: {
     width: 22,
