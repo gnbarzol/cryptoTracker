@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   SectionList,
+  ActivityIndicator
 } from 'react-native';
 import Color from 'cryptoTracker/src/res/colors';
 import Http from 'cryptoTracker/src/libs/http';
@@ -15,10 +16,13 @@ import CoinMarketItem from './CoinMarketItem';
 const CoinDetailScreen = (props) => {
   const [coin, setCoin] = useState({});
   const [markets, setMarkets] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  getMarkets = async (coinId) => {
+  const getMarkets = async (coinId) => {
+    setLoading(true);
     const url = `https://api.coinlore.net/api/coin/markets/?id=${coinId}`;
     const markets = await Http.instance.get(url);
+    setLoading(false);
     setMarkets(markets);
   };
 
@@ -29,7 +33,7 @@ const CoinDetailScreen = (props) => {
     setCoin(coin);
   }, []);
 
-  getSections = (coin) => {
+  const getSections = (coin) => {
     const sections = [
       {
         title: 'Market cap',
@@ -47,12 +51,21 @@ const CoinDetailScreen = (props) => {
     return sections;
   };
 
-  getSymbolIcon = (coinNameId) => {
+  const getSymbolIcon = (coinNameId) => {
     if (coinNameId) {
       let name = coinNameId.toLowerCase().replace(' ', '-');
       return `https://c1.coinlore.com/img/16x16/${name}.png`;
     }
   };
+
+
+  const generatedRandom = () => {
+    return Math.floor(Math.random() * (100 - 0)) + 0;
+  }
+
+  const generatedId = () => {
+    return `${generatedRandom()}-${generatedRandom()}-${generatedRandom()}`
+  }
 
   return (
     <View style={styles.container}>
@@ -82,10 +95,11 @@ const CoinDetailScreen = (props) => {
 
       <Text style={styles.marketTitle}>Markets</Text>
 
+      {loading && <ActivityIndicator color="#000" size="large" />}
       <FlatList
-      style={styles.marketList}
+        style={styles.marketList}
         horizontal={true}
-        keyExtractor={(item) => `${item.base}-${item.name}-${item.quote}`}
+        keyExtractor={(item) => generatedId()}
         data={markets}
         renderItem={({item}) => <CoinMarketItem item={item} />}
       />
@@ -137,14 +151,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     margin: 8,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   marketList: {
     maxHeight: 100,
     paddingTop: 8,
     paddingBottom: 8,
-    paddingLeft: 8
-  }
+    paddingLeft: 8,
+  },
 });
 
 export default CoinDetailScreen;

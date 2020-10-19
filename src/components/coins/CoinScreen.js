@@ -2,12 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {View, FlatList, ActivityIndicator, StyleSheet} from 'react-native';
 import Http from 'cryptoTracker/src/libs/http';
 import CoinItem from './CoinItem';
+import CoinSearch from './CoinSearch';
 
-import Color from 'cryptoTracker/src/res/colors'
+import Color from 'cryptoTracker/src/res/colors';
 
 const CoinsScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [coins, setCoins] = useState([]);
+  const [allCoins, setAllCoins] = useState([]);
 
   const getData = async () => {
     setLoading(true);
@@ -15,23 +17,38 @@ const CoinsScreen = (props) => {
       'https://api.coinlore.net/api/tickers/',
     );
     setCoins(response.data);
+    setAllCoins(response.data);
     setLoading(false);
   };
   useEffect(() => {
     getData();
   }, []);
 
-  handlePress = ( coin ) => {
-    props.navigation.navigate('Coin Detail', { coin });
+  const handlePress = (coin) => {
+    props.navigation.navigate('Coin Detail', {coin});
+  };
+
+  const handleSearch = (text) => {
+    const coinFiltered = allCoins.filter((coin) =>
+      coin.name.toLowerCase().includes(text.toLowerCase()) ||
+      coin.symbol.toLowerCase().includes(text.toLowerCase())
+    );
+
+    setCoins(coinFiltered);
   };
 
   return (
     <View style={styles.container}>
-        {loading && <ActivityIndicator color="#000" size="large" style={styles.loader} />}
-        <FlatList
-          data={coins}
-          renderItem={({item}) => <CoinItem item={item} onPress={() => handlePress(item)} />}
-        />
+      <CoinSearch onChange={handleSearch} />
+      {loading && (
+        <ActivityIndicator color="#000" size="large" style={styles.loader} />
+      )}
+      <FlatList
+        data={coins}
+        renderItem={({item}) => (
+          <CoinItem item={item} onPress={() => handlePress(item)} />
+        )}
+      />
     </View>
   );
 };
@@ -39,7 +56,7 @@ const CoinsScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Color.charade,
+    backgroundColor: Color.blackPearl,
   },
   btn: {
     padding: 8,
@@ -48,8 +65,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loader: {
-      marginTop: 10
-  }
+    marginTop: 10,
+  },
 });
 
 export default CoinsScreen;
