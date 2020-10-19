@@ -6,17 +6,36 @@ import {
   FlatList,
   StyleSheet,
   SectionList,
-  ActivityIndicator
+  ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import Color from 'cryptoTracker/src/res/colors';
 import Http from 'cryptoTracker/src/libs/http';
+import Storage from 'cryptoTracker/src/libs/storage';
 
 import CoinMarketItem from './CoinMarketItem';
+
+const ButtonAdd = ({onPress}) => {
+  return (
+    <Pressable style={styles.btnFav} onPress={onPress}>
+      <Text style={styles.btnText}>Add Favorite</Text>
+    </Pressable>
+  );
+};
+
+const ButtonRemove = ({onPress}) => {
+  return (
+    <Pressable style={[styles.btnFav, styles.btnRemove]} onPress={onPress}>
+      <Text style={styles.btnText}>Delete Favorite</Text>
+    </Pressable>
+  );
+};
 
 const CoinDetailScreen = (props) => {
   const [coin, setCoin] = useState({});
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isFav, setIsFav] = useState(false);
 
   const getMarkets = async (coinId) => {
     setLoading(true);
@@ -58,23 +77,48 @@ const CoinDetailScreen = (props) => {
     }
   };
 
-
   const generatedRandom = () => {
     return Math.floor(Math.random() * (100 - 0)) + 0;
-  }
+  };
 
   const generatedId = () => {
-    return `${generatedRandom()}-${generatedRandom()}-${generatedRandom()}`
-  }
+    return `${generatedRandom()}-${generatedRandom()}-${generatedRandom()}`;
+  };
+
+  const toggleFav = () => {
+    isFav ? removeFav() : addFav();
+  };
+
+  const addFav = () => {
+    const value = JSON.stringify(coin);
+    const key = `favorite-${coin.id}`;
+
+    const stored = Storage.instance.store(key, value);
+    stored && setIsFav(true);
+  };
+
+  const removeFav = () => {
+    // const key = `favorite-${coin.id}`;
+
+    // const removed = Storage.instance.remove(key);
+    // removed && setIsFav(false);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.subHeader}>
-        <Image
-          style={styles.symbolIcon}
-          source={{uri: getSymbolIcon(coin.nameid)}}
-        />
-        <Text style={styles.titleText}>{coin.name}</Text>
+        <View style={styles.row}>
+          <Image
+            style={styles.symbolIcon}
+            source={{uri: getSymbolIcon(coin.nameid)}}
+          />
+          <Text style={styles.titleText}>{coin.name}</Text>
+        </View>
+        {isFav ? (
+          <ButtonRemove onPress={toggleFav} />
+        ) : (
+          <ButtonAdd onPress={toggleFav} />
+        )}
       </View>
 
       <SectionList
@@ -112,14 +156,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.charade,
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   subHeader: {
     flexDirection: 'row',
     padding: 16,
     backgroundColor: 'rgba(0,0,0,0.1)',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   titleText: {
-    color: '#fff',
+    color: Color.white,
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 8,
@@ -136,7 +185,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   sectionHeaderText: {
-    color: '#fff',
+    color: Color.white,
     fontSize: 14,
     fontWeight: 'bold',
   },
@@ -144,11 +193,11 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   sectionItemText: {
-    color: '#fff',
+    color: Color.white,
     fontSize: 14,
   },
   marketTitle: {
-    color: '#fff',
+    color: Color.white,
     fontSize: 16,
     margin: 8,
     fontWeight: 'bold',
@@ -158,6 +207,17 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     paddingLeft: 8,
+  },
+  btnFav: {
+    padding: 8,
+    borderRadius: 10,
+    backgroundColor: Color.picton,
+  },
+  btnRemove: {
+    backgroundColor: Color.carmine,
+  },
+  btnText: {
+    color: Color.white,
   },
 });
 
