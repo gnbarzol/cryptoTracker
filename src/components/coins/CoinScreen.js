@@ -56,7 +56,7 @@ const CoinsScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Color.blackPearl,
+    backgroundColor: Color.charade,
   },
   btn: {
     padding: 8,
