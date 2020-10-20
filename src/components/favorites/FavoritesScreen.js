@@ -14,12 +14,7 @@ const FavoritesScreen = ({navigation}) => {
       getFavs();
     });
     return unsubscribe;
-    // getFavs();
   }, [navigation]);
-
-  const handlePress = (coin) => {
-    navigation.navigate('Coin Detail', {coin});
-  };
 
   const getFavs = async () => {
     try {
@@ -27,12 +22,16 @@ const FavoritesScreen = ({navigation}) => {
       const keys = allKeys.filter((key) => key.includes('favorite-'));
       const responseFavs = await Storage.instance.getAll(keys);
       const favorites = responseFavs.map((fav) => JSON.parse(fav[1]));
-      console.log(favorites);
       setFavs(favorites);
     } catch (err) {
       console.log('get favorites err', err);
     }
   };
+
+  const handlePress = (coin) => {
+    navigation.navigate('Coin Detail', {coin});
+  };
+
 
   return (
     <View style={styles.container}>

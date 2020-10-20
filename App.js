@@ -1,12 +1,13 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native'
+import {NavigationContainer} from '@react-navigation/native';
 import CoinStack from 'cryptoTracker/src/components/coins/CoinStack';
 import FavoritesStack from 'cryptoTracker/src/components/favorites/FavoritesStack';
+import AboutStack from 'cryptoTracker/src/components/about/AboutStack';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Color from 'cryptoTracker/src/res/colors';
-import { Image } from 'react-native';
+import {Image} from 'react-native';
 
 const Tabs = createBottomTabNavigator();
 
@@ -14,35 +15,48 @@ const App = () => {
   return (
     <NavigationContainer>
       <Tabs.Navigator
-        tabBarOptions= {{
+        tabBarOptions={{
           tintColor: '#fefefe',
           style: {
             backgroundColor: Color.blackPearl,
-          }
-        }}
-      >
-        <Tabs.Screen 
+          },
+        }}>
+        <Tabs.Screen
           name="coins"
           component={CoinStack}
           options={{
             tabBarIcon: ({size, color}) => (
-              <Image 
+              <Image
                 style={{tintColor: color, width: size, height: size}}
                 source={require('cryptoTracker/src/assets/bank.png')}
               />
-            )
+            ),
           }}
         />
-        <Tabs.Screen 
+
+        <Tabs.Screen
           name="Favorites"
           component={FavoritesStack}
           options={{
             tabBarIcon: ({size, color}) => (
-              <Image 
+              <Image
                 style={{tintColor: color, width: size, height: size}}
                 source={require('cryptoTracker/src/assets/star.png')}
               />
-            )
+            ),
+          }}
+        />
+        
+        <Tabs.Screen
+          name="About"
+          component={AboutStack}
+          options={{
+            tabBarIcon: ({size, color}) => (
+              <Image
+                style={{tintColor: color, width: size, height: size}}
+                source={require('cryptoTracker/src/assets/information.png')}
+              />
+            ),
           }}
         />
       </Tabs.Navigator>
