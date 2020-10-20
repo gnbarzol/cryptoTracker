@@ -8,6 +8,7 @@ import {
   SectionList,
   ActivityIndicator,
   Pressable,
+  Alert,
 } from 'react-native';
 import Color from 'cryptoTracker/src/res/colors';
 import Http from 'cryptoTracker/src/libs/http';
@@ -47,9 +48,10 @@ const CoinDetailScreen = (props) => {
 
   useEffect(() => {
     const {coin} = props.route.params;
+    getFav(coin.id);
     props.navigation.setOptions({title: coin.symbol}); //Change title of screen
-    getMarkets(coin.id);
     setCoin(coin);
+    getMarkets(coin.id);
   }, []);
 
   const getSections = (coin) => {
@@ -89,19 +91,42 @@ const CoinDetailScreen = (props) => {
     isFav ? removeFav() : addFav();
   };
 
-  const addFav = () => {
+  const addFav = async () => {
     const value = JSON.stringify(coin);
     const key = `favorite-${coin.id}`;
 
-    const stored = Storage.instance.store(key, value);
+    const stored = await Storage.instance.store(key, value);
     stored && setIsFav(true);
   };
 
   const removeFav = () => {
-    // const key = `favorite-${coin.id}`;
+    Alert.alert('Remove favorite', 'Are you sure?', [
+      {
+        text: 'cancel',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Remove',
+        onPress: async () => {
+          const key = `favorite-${coin.id}`;
 
-    // const removed = Storage.instance.remove(key);
-    // removed && setIsFav(false);
+          const removed = await Storage.instance.remove(key);
+          removed && setIsFav(false);
+        },
+        style: 'destructive',
+      },
+    ]);
+  };
+
+  const getFav = async (coinId) => {
+    try {
+      const key = `favorite-${coinId}`;
+      const favString = await Storage.instance.get(key);
+      favString && setIsFav(true);
+    } catch (err) {
+      console.log('get favorites err', err);
+    }
   };
 
   return (
