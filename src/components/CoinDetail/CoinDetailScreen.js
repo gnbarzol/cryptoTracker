@@ -84,7 +84,7 @@ const CoinDetailScreen = (props) => {
   };
 
   const generatedId = () => {
-    return `${generatedRandom()}-${generatedRandom()}-${generatedRandom()}`;
+    return `${generatedRandom()}-${generatedRandom()}`;
   };
 
   const toggleFav = () => {
@@ -168,7 +168,7 @@ const CoinDetailScreen = (props) => {
       <FlatList
         style={styles.marketList}
         horizontal={true}
-        keyExtractor={(item) => generatedId()}
+        keyExtractor={(item) => item.name + generatedId()}
         data={markets}
         renderItem={({item}) => <CoinMarketItem item={item} />}
       />

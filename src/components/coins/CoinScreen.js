@@ -45,6 +45,7 @@ const CoinsScreen = (props) => {
       )}
       <FlatList
         data={coins}
+        keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <CoinItem item={item} onPress={() => handlePress(item)} />
         )}
